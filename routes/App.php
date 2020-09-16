@@ -8,8 +8,6 @@ use App\v1\DAO\UserDAO;
 use Firebase\JWT\JWT;
 use \App\v1\Controllers\AuthController;
 use \App\v1\Controllers\UserController;
-use \App\v1\Controllers\UserRouteController;
-use \App\v1\Controllers\UserRoutePathController;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Tuupola\Middleware\JwtAuthentication;
@@ -84,11 +82,6 @@ class App
     {
         $app = new \Slim\App(slimConfiguration());
 
-        $app->get('/', function (Request $request, Response $response) {
-            $response->getBody()->write("Hello, Todo");
-            return $response;
-        });
-
         $app->group('/v1', function () use ($app) {
 
             $app->post('/login', AuthController::class . ':login');
@@ -104,16 +97,6 @@ class App
                 $app->put('/user/change-password', UserController::class . ':changePassword');
                 $app->delete('/user/{user_id}', UserController::class . ':deleteUser');
 
-                // Routes
-                $app->get('/routes/{user_id}', UserRouteController::class . ':getRoutesByUser');
-                $app->get('/route/{user_route_id}', UserRouteController::class . ':getRoute');
-                $app->post('/route', UserRouteController::class . ':postUserRoute');
-                $app->put('/route/end', UserRouteController::class . ':putUserRouteEndTime');
-                $app->delete('/route/{user_route_id}', UserRouteController::class . ':deleteUserRoute');
-
-                // RoutePath
-                $app->get('/routepath/{user_route_id}', UserRoutePathController::class . ':getPathByRoute');
-                $app->post('/routepath', UserRoutePathController::class . ':postUserRoutePath');
             })->add(new JwtAuthMiddleware())->add(jwtAuth());
         });
 
