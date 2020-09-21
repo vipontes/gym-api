@@ -7,6 +7,7 @@ require 'constants.php';
 use App\v1\DAO\UserDAO;
 use Firebase\JWT\JWT;
 use \App\v1\Controllers\AuthController;
+use App\v1\Controllers\TrainingController;
 use \App\v1\Controllers\UserController;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -96,6 +97,10 @@ class App
                 $app->put('/user', UserController::class . ':putUser');
                 $app->put('/user/change-password', UserController::class . ':changePassword');
                 $app->delete('/user/{user_id}', UserController::class . ':deleteUser');
+
+                // Training
+                $app->get('/training/user/{user_id}', TrainingController::class . ':getTrainingByUser');
+
 
             })->add(new JwtAuthMiddleware())->add(jwtAuth());
         });
